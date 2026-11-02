@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Habitude Note Clipper",
+  "description": "Preview selected text from a note or web page, then save a portable Markdown file for Habitude.",
+  "version": "0.1.0",
+  "permissions": ["activeTab", "scripting"],
+  "action": { "default_popup": "popup.html", "default_title": "Habitude · Save selected writing" },
+  "icons": { "128": "icon.png" },
+  "homepage_url": "https://habitude.ai",
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'" }
+}

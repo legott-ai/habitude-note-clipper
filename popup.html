@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Habitude Note Clipper</title><link rel="stylesheet" href="popup.css">
+<body><header><img src="icon.png" alt="" width="32" height="32"><strong>Habitude</strong><button id="language" aria-label="한국어 / English">한국어</button></header>
+<h1 id="heading">Keep a piece of writing</h1><p id="intro">Select text in your note, then preview it here. Nothing is sent to a server.</p>
+<button id="capture">Preview selected text</button><p id="status" role="status" aria-live="polite"></p>
+<section id="review" hidden><label for="title" id="titleLabel">Title</label><input id="title" maxlength="500"><label for="text" id="textLabel">Selected text</label><textarea id="text" rows="8" maxlength="200000"></textarea><p id="origin"></p><button id="save">Save Markdown</button></section>
+<footer><a href="https://habitude.ai/app" target="_blank" rel="noopener noreferrer" id="open">Open Habitude</a><p id="help">In the Mac app: Settings → Import from other note apps. Choose the source shown above and import your saved file. Images and whole notebooks are not captured.</p></footer>
+<script type="module" src="popup.mjs"></script></body></html>
