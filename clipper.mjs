@@ -17,10 +17,15 @@ export function normalizeClip(input) {
   url.search = ''; url.hash = '';
   return { text, title: input.title.replace(/[\r\n\x00-\x1f]/g, ' ').slice(0, 500).trim() || 'Untitled', url: url.href, source };
 }
+/** The local calendar day, `2026-11-19`. Habitude's web journal import dates a file by a day in its name. */
+export function localDay(now) {
+  if (!(now instanceof Date) || !Number.isFinite(now.getTime())) throw new Error('Invalid date');
+  return [now.getFullYear(), now.getMonth() + 1, now.getDate()].map((part, index) => String(part).padStart(index ? 2 : 4, '0')).join('-');
+}
 export async function portableMarkdown(clip, digest = async text => {
   const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return Array.from(new Uint8Array(bytes), value => value.toString(16).padStart(2, '0')).join('');
-}) {
+}, now = new Date()) {
   const value = normalizeClip(clip);
   // A deliberate clip is a new capture. Its ID persists within this preview;
   // different selections on the same page must not overwrite each other.
@@ -28,6 +33,8 @@ export async function portableMarkdown(clip, digest = async text => {
   const metadata = ['---', 'habitude_import_schema: 1', `habitude_source: ${value.source}`,
     `habitude_source_id: ${JSON.stringify('clip-' + id)}`, `title: ${JSON.stringify(value.title)}`,
     `source_url: ${JSON.stringify(value.url)}`, '---'];
+  // The day of saving goes in the file name, not the metadata: it is when the clip was kept, not when
+  // the source was written, and the Mac importer accepts only the interchange fields above.
   return { markdown: metadata.join('\n') + '\n\n' + value.text + '\n',
-    filename: 'habitude-clip-' + id.slice(0, 16) + '.md', source: value.source };
+    filename: 'habitude-clip-' + localDay(now) + '-' + id.slice(0, 16) + '.md', source: value.source };
 }

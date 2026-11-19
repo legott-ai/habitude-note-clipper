@@ -1,0 +1,5 @@
+{
+  "appName": { "message": "Habitude Note Clipper", "description": "Extension name in the browser and the Chrome Web Store." },
+  "appDescription": { "message": "Save the text you select on a page as a Markdown file you can bring into Habitude. Nothing is sent to a server.", "description": "At most 132 characters." },
+  "actionTitle": { "message": "Habitude: save selected text" }
+}

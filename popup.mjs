@@ -4,7 +4,7 @@ let ko = navigator.language.startsWith('ko'), preview = null, busy = false;
 const t = (a, b) => ko ? a : b;
 function translate() {
   document.documentElement.lang = ko ? 'ko' : 'en';
-  for (const [id, a, b] of [['heading','기억할 글 한 조각','Keep a piece of writing'],['intro','노트에서 글을 선택한 뒤 여기서 미리 확인하세요. 서버로 전송하지 않습니다.','Select text in your note, then preview it here. Nothing is sent to a server.'],['capture','선택한 글 미리보기','Preview selected text'],['titleLabel','제목','Title'],['textLabel','선택한 글','Selected text'],['save','Markdown 저장','Save Markdown'],['open','Habitude 열기','Open Habitude'],['help','Mac 앱 설정 → 다른 노트 앱에서 가져오기에서 표시된 원본 앱을 선택하고 저장한 파일을 가져오세요. 이미지나 전체 노트북은 수집하지 않습니다.','In the Mac app: Settings → Import from other note apps. Choose the source shown above and import your saved file. Images and whole notebooks are not captured.']]) $(id).textContent = t(a,b);
+  for (const [id, a, b] of [['heading','기억할 글 한 조각','Keep a piece of writing'],['intro','노트에서 글을 고른 뒤 여기서 미리 봅니다. 글은 서버로 보내지 않습니다.','Select text in your note, then preview it here. Nothing is sent to a server.'],['capture','선택한 글 미리보기','Preview selected text'],['titleLabel','제목','Title'],['textLabel','선택한 글','Selected text'],['save','Markdown 저장','Save Markdown'],['open','Habitude 열기','Open Habitude'],['help','Habitude 웹의 설정 → Obsidian 일기 가져오기 → Markdown 파일 선택에서 이 파일을 고르면, 저장한 날짜의 일기로 들어갑니다.','In Habitude on the web, pick this file in Settings → Import Obsidian journal notes → Choose Markdown files. It becomes an entry dated the day you saved it.']]) $(id).textContent = t(a,b);
   $('language').textContent = ko ? 'English' : '한국어';
 }
 $('language').addEventListener('click', () => { ko = !ko; translate(); });
@@ -16,9 +16,10 @@ $('capture').addEventListener('click', async () => {
     const results = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: () => ({ text: window.getSelection()?.toString() ?? '', title: document.title, url: location.href }) });
     preview = normalizeClip(results[0]?.result);
     $('title').value = preview.title; $('text').value = preview.text;
-    $('origin').textContent = preview.source + ' · ' + preview.url;
-    $('review').hidden = false;
-  } catch { $('status').textContent = t('원본 페이지에서 글을 선택해 주세요. 보호된 페이지나 프레임 안의 선택은 읽지 못할 수 있습니다.', 'Select text in the page first. Protected pages and embedded frames may be unavailable.'); }
+    $('origin').textContent = preview.source + ' · ' + preview.url; $('origin').title = preview.url;
+    // The how-to line has done its job; the room goes to the preview so Save stays in view.
+    $('intro').hidden = true; $('review').hidden = false;
+  } catch { $('intro').hidden = false; $('status').textContent = t('원본 페이지에서 글을 선택해 주세요. 보호된 페이지나 프레임 안의 선택은 읽지 못할 수 있습니다.', 'Select text in the page first. Protected pages and embedded frames may be unavailable.'); }
   finally { busy = false; $('capture').disabled = false; }
 });
 $('save').addEventListener('click', async () => {
